@@ -1,0 +1,27 @@
+{
+  "mern": [
+    "javascript",
+    "react",
+    "node",
+    "express",
+    "mongodb",
+    "rest api",
+    "jwt",
+    "docker"
+  ],
+  "frontend": [
+    "html",
+    "css",
+    "javascript",
+    "react",
+    "responsive design"
+  ],
+  "backend": [
+    "node",
+    "express",
+    "mongodb",
+    "sql",
+    "authentication",
+    "api design"
+  ]
+}
