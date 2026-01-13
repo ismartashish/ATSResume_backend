@@ -1,10 +1,16 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
+from functools import lru_cache
+import numpy as np
 
-def embed(texts):
+@lru_cache(maxsize=1)
+def get_vectorizer():
+    return TfidfVectorizer(stop_words="english")
+
+def embed(text: str):
     """
-    texts: list[str]
-    returns: numpy.ndarray
+    text: str
+    returns: numpy.ndarray (1D vector)
     """
-    vectorizer = TfidfVectorizer(stop_words="english")
-    vectors = vectorizer.fit_transform(texts)
-    return vectors.toarray()
+    vectorizer = get_vectorizer()
+    vector = vectorizer.fit_transform([text]).toarray()
+    return vector[0]
