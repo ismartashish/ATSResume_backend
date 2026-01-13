@@ -1,10 +1,17 @@
-from sentence_transformers import SentenceTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from functools import lru_cache
+import numpy as np
 
-# Load model once (important for performance)
-model = SentenceTransformer("all-MiniLM-L6-v2")
 
-def embed(text: str):
+@lru_cache(maxsize=1)
+def get_vectorizer():
+    return TfidfVectorizer(stop_words="english")
+
+
+def embed(texts):
     """
-    Convert text into sentence embedding
+    texts: list[str]
+    returns: numpy array
     """
-    return model.encode(text)
+    vectorizer = get_vectorizer()
+    return vectorizer.fit_transform(texts).toarray()
