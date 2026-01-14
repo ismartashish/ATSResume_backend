@@ -1,5 +1,4 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-import numpy as np
 
 def embed_pair(text1: str, text2: str):
     """
