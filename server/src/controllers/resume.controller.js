@@ -16,7 +16,7 @@ export const reanalyzeResume = async (req, res) => {
       });
     }
 
-    const aiRes = await axios.post("http://127.0.0.1:8000/analyze", {
+    const aiRes = await axios.post("https://atsresume-ai.onrender.com/analyze", {
       resume_text,
       job_description
     });
