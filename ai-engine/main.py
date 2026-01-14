@@ -15,7 +15,7 @@ class AnalyzeRequest(BaseModel):
     resume_text: str
     job_description: str
 
-@app.post("/analyze")
+@app.post("/api/resume/analyze")
 def analyze(data: AnalyzeRequest):
     resume_skills = extract_skills(data.resume_text)
 
