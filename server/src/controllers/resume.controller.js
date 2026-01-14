@@ -16,7 +16,7 @@ export const reanalyzeResume = async (req, res) => {
       });
     }
 
-    const aiRes = await axios.post("https://atsresume-ai.onrender.com/analyze", {
+    const aiRes = await axios.post("https://atsresume-ai.onrender.com/api/resume/analyze", {
       resume_text,
       job_description
     });
@@ -44,7 +44,7 @@ export const analyzeResume = async (req, res) => {
       req.file.mimetype
     );
 
-    const { data } = await axios.post(`${ENV.AI_URL}/analyze`, {
+    const { data } = await axios.post(`${ENV.AI_URL}/api/resume/analyze`, {
       resume_text: resumeText,
       job_description: jobDescription
     });
