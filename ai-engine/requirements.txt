@@ -1,8 +1,7 @@
 fastapi
 uvicorn
 python-multipart
-pdfplumber
-PyMuPDF
 scikit-learn
 numpy
-spacy
+spacy==3.8.0
+en-core-web-sm==3.8.0
