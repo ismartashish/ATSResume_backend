@@ -6,7 +6,7 @@ import { extractText } from "../utils/pdf.util.js";
 /* =====================================
    1️⃣ INITIAL ANALYSIS (PDF UPLOAD)
 ===================================== */
-const aiResponse = await axios.post(
+export const aiResponse = await axios.post(
   `${ENV.AI_URL}/api/resume/analyze`,
   {
     resume_text: resumeText,
