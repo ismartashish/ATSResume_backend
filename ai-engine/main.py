@@ -1,35 +1,66 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
 
-from services.premium_ats import premium_ats_checks
-from services.skill_extractor import extract_skills
+from utils.pdf import extract_text_from_pdf
 from services.matcher import match_resume
+from services.skill_extractor import extract_skills
 from services.resume_score import calculate_score
 from services.improvement import improvement_suggestions
 from services.ai_detector import detect_ai_content
 from services.repetition_detector import detect_repetition
+from services.premium_ats import premium_ats_checks
 
 app = FastAPI(title="ATS Resume AI")
 
-class AnalyzeRequest(BaseModel):
-    resume_text: str
-    job_description: str
+# ✅ CORS (important for frontend)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # later restrict
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+# -------------------------
+# HEALTH CHECK
+# -------------------------
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+# -------------------------
+# MAIN ANALYSIS ENDPOINT
+# -------------------------
 @app.post("/api/resume/analyze")
-def analyze(data: AnalyzeRequest):
-    resume_skills = extract_skills(data.resume_text)
+async def analyze_resume(
+    resume: UploadFile = File(...),
+    jobDescription: str = Form(...)
+):
+    # 1. Extract resume text
+    resume_text = extract_text_from_pdf(resume.file)
 
+    # 2. Skills
+    resume_skills = extract_skills(resume_text)
+
+    # 3. Match score
     match_score, missing_skills, job_skills = match_resume(
-        data.resume_text,
-        data.job_description
+        resume_text,
+        jobDescription
     )
 
+    # 4. Resume score
     resume_score = calculate_score(resume_skills, match_score)
+
+    # 5. Suggestions
     suggestions = improvement_suggestions(missing_skills, resume_score)
 
-    ai_warnings = detect_ai_content(data.resume_text)
-    repetitions = detect_repetition(data.resume_text)
+    # 6. AI warnings
+    ai_warnings = detect_ai_content(resume_text)
 
+    # 7. Repetitions
+    repetitions = detect_repetition(resume_text)
+
+    # 8. Premium ATS
     premium = premium_ats_checks(
         resume_skills,
         job_skills,
@@ -47,10 +78,6 @@ def analyze(data: AnalyzeRequest):
         "suggestions": suggestions,
         "aiWarnings": ai_warnings,
         "repetitions": repetitions,
-        "resumeText": data.resume_text,
+        "resumeText": resume_text,
         "premiumATS": premium
     }
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
