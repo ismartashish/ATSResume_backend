@@ -6,46 +6,20 @@ import { extractText } from "../utils/pdf.util.js";
 /* =====================================
    1️⃣ INITIAL ANALYSIS (PDF UPLOAD)
 ===================================== */
-export const analyzeResume = async (req, res) => {
-  try {
-    const jobDescription = req.body.jobDescription;
-
-    if (!req.file || !jobDescription) {
-      return res.status(400).json({
-        success: false,
-        message: "Resume file or job description missing"
-      });
-    }
-
-    const resumeText = await extractText(
-      req.file.path,
-      req.file.mimetype
-    );
-
-    const aiResponse = await axios.post(
-      `${ENV.AI_URL}/api/resume/analyze`,
-      {
-        resume_text: resumeText,
-        job_description: jobDescription
-      },
-      { timeout: 60_000 }
-    );
-
-    fs.unlink(req.file.path, () => {});
-
-    return res.json({
-      success: true,
-      data: aiResponse.data
-    });
-
-  } catch (err) {
-    console.error("❌ ANALYZE ERROR:", err.message);
-    return res.status(500).json({
-      success: false,
-      message: "Resume analysis failed"
-    });
+const aiResponse = await axios.post(
+  `${ENV.AI_URL}/api/resume/analyze`,
+  {
+    resume_text: resumeText,
+    job_description: jobDescription
+  },
+  {
+    headers: {
+      "Content-Type": "application/json"
+    },
+    timeout: 60000
   }
-};
+);
+
 
 /* =====================================
    2️⃣ LIVE RE-ANALYSIS (TEXT ONLY)
