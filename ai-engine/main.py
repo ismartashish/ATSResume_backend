@@ -32,7 +32,7 @@ def health():
 # -------------------------
 # MAIN ANALYSIS ENDPOINT
 # -------------------------
-@app.post("/api/resume/analyze")
+@app.post("/analyze")
 async def analyze_resume(
     resume: UploadFile = File(...),
     jobDescription: str = Form(...)
