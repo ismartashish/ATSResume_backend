@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 
-from services.pdf_service import extract_text_from_pdf
+
 
 from services.matcher import match_resume
 from services.skill_extractor import extract_skills
