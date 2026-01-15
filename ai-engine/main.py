@@ -1,7 +1,8 @@
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 
-from utils.pdf import extract_text_from_pdf
+from services.pdf_service import extract_text_from_pdf
+
 from services.matcher import match_resume
 from services.skill_extractor import extract_skills
 from services.resume_score import calculate_score
