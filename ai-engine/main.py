@@ -23,7 +23,7 @@ def root():
 def health():
     return {"ok": True}
 
-@app.post("/api/resume/analyze")
+@app.post("/resume/analyze")
 def analyze(data: AnalyzeRequest):
     resume_skills = extract_skills(data.resume_text)
 
